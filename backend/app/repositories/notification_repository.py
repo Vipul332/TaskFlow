@@ -61,3 +61,28 @@ def update_notification_status(
         raise RuntimeError("Unable to update notification record.")
 
     return response.data[0]
+
+
+def get_notifications_for_user(user_id):
+    """
+    Fetch notifications belonging to a particular user,
+    including the related task information.
+    """
+
+    if extensions.supabase_client is None:
+        raise RuntimeError("Supabase is not configured.")
+
+    response = (
+        extensions.supabase_client
+        .table("notifications")
+        .select(
+            "id, task_id, recipient_id, type, status, "
+            "sent_at, error_message, created_at, "
+            "tasks(title, description, priority, status)"
+        )
+        .eq("recipient_id", user_id)
+        .order("created_at", desc=True)
+        .execute()
+    )
+
+    return response.data or []

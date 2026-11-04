@@ -38,3 +38,6 @@ Thumbs.db
 
 # Editor
 .vscode/
+
+# TypeScript build cache
+*.tsbuildinfo
